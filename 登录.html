@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录</title>
+    <style>
+        label {color: rgb(159, 237, 190);}
+        button {color: #0b506b;}
+        h2 {text-align: center;}
+
+        /* 设置输入框样式 */
+        input[type="text"], input[type="password"] {
+            width: 30%;
+            height: 35px;
+            margin: 10px auto;
+            display: block;
+        }
+
+        /* 设置提交按钮样式 */
+        .button-wrapper {
+            text-align: right;
+        }
+        .button-wrapper button {
+            margin-top: 10px;
+        }
+        body {
+            background-image: url("3gbizhiCom-1699078007.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+</style>
+    </style>
+</head>
+<body>
+    <form id="myForm">
+        <h2>登录</h2>
+        <label for="username">用户：</label>
+        <input type="text" id="username" name="username" required>
+        <br>
+        <label for="password">密码：</label>
+        <input type="password" id="password" name="password" required>
+        <div class="button-wrapper">
+            <button type="button" onclick="myfunction()">登录</button>
+        </div>
+    </form>    
+    <script>
+        function myfunction() {
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+
+            if (username === "") {
+                alert("请正确输入您的账号");
+                return false;
+            }
+            if (password === "") {
+                alert("请正确输入您的密码");
+                return false;
+            }
+            window.location.href = "http://127.0.0.1:5500/%E6%8E%92%E8%A1%8C%E6%A6%9C.html";
+            return false;
+        }
+    </script>
+</body>
+</html>

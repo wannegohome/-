@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head> 
+  <title>排行榜</title>
+  <style>
+    #data-table {
+      border-collapse: collapse;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid rgb(3, 3, 3);
+      padding: 8px;
+      text-align: center;
+      vertical-align: middle;
+    }
+    th {
+      background-color: #42d2c6;
+    }
+    body {
+      background-image: url("3gbizhiCom-1699078007.jpg");
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+    h2 {
+      text-align: center;
+    }
+    .pass {
+      background-color: rgb(84, 123, 84);
+    }
+    .fail {
+      background-color: rgb(201, 96, 44);
+    }
+    td.pass:first-child {
+      color: darkgreen;
+    }
+  </style>
+</head>
+<body>
+  <h2>排行榜</h2>
+  <div id="container">
+    <table id="data-table">
+      <thead>
+        <tr>
+          <th>姓名</th>
+          <th>学号</th>
+          <th>第一题</th>
+          <th>第二题</th>
+          <th>第三题</th> 
+          <th>第四题</th>
+          <th>总分</th>
+          <th>Rank</th>
+        </tr>
+      </thead>
+      <tbody id="data-body"></tbody>
+    </table>
+    <button class="button" id="refresh-button">刷新</button>
+  </div>
+  <script>
+    function fetchData() {
+      // 发送网络请求
+      fetch("https://puzzle.qieee.top/api/rank")
+        .then(response => response.json())
+        .then(data => {
+          // 获取表格主体元素
+          const tableBody = document.getElementById("data-body");
+
+          data.sort((a, b) => {
+            const totalScoreA = a.score.reduce((sum, item) => sum + item.score, 0);
+            const totalScoreB = b.score.reduce((sum, item) => sum + item.score, 0);
+            return totalScoreB - totalScoreA; // 降序排列
+          });
+          tableBody.innerHTML = "";
+          data.forEach((item, index) => {
+            const row = document.createElement("tr");
+            const nameCell = document.createElement("td");
+            const scoreCell = document.createElement("td");
+            const scoreCells = [];
+
+            nameCell.textContent = item.name;
+            scoreCell.textContent = item.id;
+
+            item.score.forEach((scoreItem, scoreIndex) => {
+              const scoreCell = document.createElement("td");
+              scoreCell.textContent = scoreItem.score;
+
+              if (scoreItem.score === 10) {
+                scoreCell.classList.add("pass"); // 通过的分数添加类名 "pass"
+              } else {
+                scoreCell.classList.add("fail"); // 未通过的分数添加类名 "fail"
+              }
+
+              scoreCells.push(scoreCell);
+            });
+
+            const totalScore = item.score.reduce((sum, scoreItem) => sum + scoreItem.score, 0);
+            const totalScoreCell = document.createElement("td"); // 新增的单元格用于显示总分
+            totalScoreCell.textContent = totalScore;
+
+            const rankCell = document.createElement("td");
+            rankCell.textContent = index + 1;
+
+            row.appendChild(nameCell);
+            row.appendChild(scoreCell);
+            scoreCells.forEach(cell => row.appendChild(cell));
+            row.appendChild(totalScoreCell); // 将总分单元格添加到行中
+            row.appendChild(rankCell);
+
+            tableBody.appendChild(row);
+          });
+        })
+        .catch(error => console.error(error));
+    }
+    fetchData();
+
+    // 添加刷新按钮事件
+    const refreshButton = document.getElementById("refresh-button");
+    refreshButton.addEventListener("click", fetchData);
+  </script>
+</body>
+</html>
